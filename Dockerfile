@@ -8,8 +8,10 @@ COPY --from=docker /usr/local/bin/docker /usr/local/bin/docker
 
 ENV DOCKER_COMPOSE_BUILD_DEPENDENCIES='build-base libffi-dev openssl-dev openssh-client'
 
-RUN apk add --no-cache rsync bash git ${DOCKER_COMPOSE_BUILD_DEPENDENCIES} \
-  && pip3 install docker-compose==${DOCKER_COMPOSE_VERSION} \
+ARG DOCKER_COMPOSE_VERSION=${DOCKER_COMPOSE_VERSION}
+ARG COMPOSE_BUILD_DEPS="python-dev libffi-dev openssl-dev gcc libc-dev make"
+RUN apk --update --no-cache add $COMPOSE_BUILD_DEPS \
+  && pip3 install docker-compose \
   && pip3 install awscli --upgrade --user \
-  && ln -s ~/.local/bin/aws /usr/local/bin/aws \
-  && apk del ${DOCKER_COMPOSE_BUILD_DEPENDENCIES}
+  && apk del $COMPOSE_BUILD_DEPS \
+  && ln -s ~/.local/bin/aws /usr/local/bin/aws
