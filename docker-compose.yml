@@ -1,0 +1,11 @@
+version: "3.2"
+services:
+
+  # Example build command: DOCKER_VERSION=18.06.1 DOCKER_COMPOSE_VERSION=1.22.0 PATCH=1 docker-compose build circleci_docker
+  circleci_docker:
+    image: circleci_docker
+    build:
+      context: .
+      args:
+        DOCKER_VERSION: ${DOCKER_VERSION}
+        DOCKER_COMPOSE_VERSION: ${DOCKER_COMPOSE_VERSION}

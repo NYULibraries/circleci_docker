@@ -1,0 +1,88 @@
+docker-defaults: &docker-defaults
+  docker:
+    - image: quay.io/nyulibraries/circleci_docker:18.06.3-dc-1.23.2-0
+  working_directory: ~/app
+
+setup_env_vars: &setup_env_vars
+    run:
+      name: Sets up environment variables
+      command: |
+        echo 'export $(cat .env | xargs)' >> $BASH_ENV
+        echo 'export BRANCH_NO_SLASH=${CIRCLE_BRANCH//\//_}' >> $BASH_ENV
+
+build_docker: &build_docker
+  run:
+    name: Build Docker
+    command: |
+      touch secrets.env
+      docker-compose build
+
+push_docker: &push_docker
+  run:
+    name: Push Docker
+    command: |
+      docker tag circleci_docker quay.io/nyulibraries/circleci_docker:${BRANCH_NO_SLASH}
+      docker tag circleci_docker quay.io/nyulibraries/circleci_docker:${BRANCH_NO_SLASH}-${CIRCLE_SHA1}
+      docker login -u "$QUAY_USERNAME" --password "$QUAY_PASSWORD" quay.io
+      docker push quay.io/nyulibraries/circleci_docker:${BRANCH_NO_SLASH}
+      docker push quay.io/nyulibraries/circleci_docker:${BRANCH_NO_SLASH}-${CIRCLE_SHA1}
+
+push_docker_for_tag: &push_docker_for_tag
+  run:
+    name: Push Docker For Tag
+    command: |
+      docker tag circleci_docker quay.io/nyulibraries/circleci_docker:${CIRCLE_TAG}
+      docker login -u "$QUAY_USERNAME" --password "$QUAY_PASSWORD" quay.io
+      docker push quay.io/nyulibraries/circleci_docker:${CIRCLE_TAG}
+
+push_prerelease_for_master: &push_prerelease_for_master
+  run:
+    name: Pushes prerelease docker image to quay
+    command: |
+      export QUAY_TAG=quay.io/nyulibraries/circleci_docker:${NGINX_VERSION}-${PATCH}-pre
+      docker tag circleci_docker $QUAY_TAG
+      docker login -u "$QUAY_USERNAME" --password "$QUAY_PASSWORD" quay.io
+      docker push $QUAY_TAG
+
+version: 2
+jobs:
+  build-image:
+    <<: *docker-defaults
+    steps:
+      - checkout
+      - setup_remote_docker
+      - <<: *setup_env_vars
+      - <<: *build_docker
+      - <<: *push_docker
+  build-image-for-tag:
+    <<: *docker-defaults
+    steps:
+      - checkout
+      - setup_remote_docker
+      - <<: *setup_env_vars
+      - <<: *build_docker
+      - <<: *push_docker_for_tag
+  build-prerelease-image:
+    <<: *docker-defaults
+    steps:
+      - checkout
+      - setup_remote_docker
+      - <<: *setup_env_vars
+      - <<: *build_docker
+      - <<: *push_prerelease_for_master
+
+workflows:
+  version: 2
+  build:
+    jobs:
+      - build-image
+      - build-image-for-tag:
+          filters:
+            tags:
+              only: /.*/
+            branches:
+              ignore: /.*/
+      - build-prerelease-image:
+          filters:
+            branches:
+              only: master
