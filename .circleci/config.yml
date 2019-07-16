@@ -39,7 +39,7 @@ push_prerelease_for_master: &push_prerelease_for_master
   run:
     name: Pushes prerelease docker image to quay
     command: |
-      export QUAY_TAG=quay.io/nyulibraries/circleci_docker:${NGINX_VERSION}-${PATCH}-pre
+      export QUAY_TAG=quay.io/nyulibraries/circleci_docker:${DOCKER_VERSION}-dc-${DOCKER_COMPOSE_VERSION}-${PATCH}-pre
       docker tag circleci_docker $QUAY_TAG
       docker login -u "$QUAY_USERNAME" --password "$QUAY_PASSWORD" quay.io
       docker push $QUAY_TAG
