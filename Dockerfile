@@ -6,8 +6,6 @@ ARG DOCKER_COMPOSE_VERSION=${DOCKER_COMPOSE_VERSION}
 
 COPY --from=docker /usr/local/bin/docker /usr/local/bin/docker
 
-ENV DOCKER_COMPOSE_BUILD_DEPENDENCIES='build-base libffi-dev openssl-dev openssh-client'
-
 ARG DOCKER_COMPOSE_VERSION=${DOCKER_COMPOSE_VERSION}
 ARG COMPOSE_BUILD_DEPS="python-dev libffi-dev openssl-dev gcc libc-dev make"
 RUN apk --update --no-cache add $COMPOSE_BUILD_DEPS \
