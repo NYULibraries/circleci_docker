@@ -1,5 +1,8 @@
 # circleci_docker
 
+[![Docker Repository on Quay](https://quay.io/repository/nyulibraries/circleci_docker/status "Docker Repository on Quay")](https://quay.io/repository/nyulibraries/circleci_docker)
+[![CircleCI](https://circleci.com/gh/NYULibraries/circleci_docker.svg?style=svg)](https://circleci.com/gh/NYULibraries/circleci_docker)
+
 # NYULibraries CircleCI Docker
 
 Docker image for building on CircleCI. Includes:
