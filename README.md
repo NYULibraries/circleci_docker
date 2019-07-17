@@ -1,6 +1,17 @@
 # circleci_docker
 
-Homegrown image for using docker in CircleCI
+# NYULibraries CircleCI Docker
+
+Docker image for building on CircleCI. Includes:
+
+- docker client
+- docker-compose
+- aws-cli
+- git
+- ssh
+- python (for running aws-cli)
+
+Images (and releases) tagged based on versions of docker and docker-compose.
 
 ## Usage
 
@@ -23,6 +34,3 @@ Builds are controlled by values in the `.env` file
 DOCKER_VERSION=18.06.1
 DOCKER_COMPOSE_VERSION=1.23.2
 PATCH=0
-```
-
-Then, CI/CD will build and deploy a prerelease version of the image to quay. Publishing a Github release will publish a tagged version of the image.
