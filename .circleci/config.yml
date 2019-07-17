@@ -86,3 +86,12 @@ workflows:
           filters:
             branches:
               only: master
+  build-tagged-daily:
+    jobs:
+    - build-image-for-tag
+    triggers:
+    - schedule:
+        cron: "0 3 * * *"
+        filters:
+          branches:
+            only: master
