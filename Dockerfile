@@ -5,7 +5,7 @@ FROM python:3.7-alpine
 
 COPY --from=docker /usr/local/bin/docker /usr/local/bin/docker
 
-RUN apk --update --no-cache --upgrade add git openssh rsync bash 
+RUN apk --update --no-cache --upgrade add git openssh rsync bash gettext
 
 ARG DOCKER_COMPOSE_VERSION=${DOCKER_COMPOSE_VERSION}
 ARG COMPOSE_BUILD_DEPS="py3-pip libffi-dev openssl-dev gcc libc-dev make"
