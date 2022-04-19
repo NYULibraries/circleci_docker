@@ -8,9 +8,9 @@ COPY --from=docker /usr/local/bin/docker /usr/local/bin/docker
 RUN apk --update --no-cache --upgrade add git openssh rsync bash 
 
 ARG DOCKER_COMPOSE_VERSION=${DOCKER_COMPOSE_VERSION}
-ARG COMPOSE_BUILD_DEPS="py3-pip libffi-dev openssl-dev gcc libc-dev make"
+ARG COMPOSE_BUILD_DEPS="curl py-pip python3-dev libffi-dev openssl-dev gcc libc-dev rust cargo make"
 RUN apk --update --no-cache add $COMPOSE_BUILD_DEPS \
-  && pip3 install docker-compose \
-  && pip3 install awscli --upgrade --user \
-  && apk del $COMPOSE_BUILD_DEPS \
-  && ln -s ~/.local/bin/aws /usr/local/bin/aws
+  && pip install docker-compose==$DOCKER_COMPOSE_VERSION \ 
+  && pip install awscli --upgrade --user \
+  && ln -s ~/.local/bin/aws /usr/local/bin/aws \
+  && apk del $COMPOSE_BUILD_DEPS 
